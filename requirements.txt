@@ -1,0 +1,9 @@
+torch
+torchvision
+numpy
+attrdict
+scikit-image
+pandas
+tqdm
+scikit-learn 
+argparse
