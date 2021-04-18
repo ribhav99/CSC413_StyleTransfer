@@ -34,7 +34,8 @@ args_dict = {
     # 'num_train_samples': 10,
     'train': True,
     'load_models': False,
-    'model_path': '../models/something.pt'
+    'model_path': '../models/something.pt',
+    'save_epoch': 10
 }
 
 run_args.update(args_dict)

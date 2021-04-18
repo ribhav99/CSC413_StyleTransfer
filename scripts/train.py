@@ -11,6 +11,8 @@ from datetime import datetime
 def train(args, device):
     full_data = get_data_loader(args)
 
+    time = datetime.now()
+
     d_x = Discriminator(args).to(device)  # x is horse
     d_y = Discriminator(args).to(device)  # y is zebra
     print("--Discriminator architecture--")
@@ -62,16 +64,17 @@ def train(args, device):
             10, dimensions[0], dimensions[1], dimensions[2]).to(device)
         sampling = args.batch_size//2
     print("Start Training....")
-    for epoch in trange(args.num_epochs):
+    for epoch in trange(1, args.num_epochs+1):
         total_d_loss = 0.0
         total_g_x_y_loss = 0.0
         total_g_y_x_loss = 0.0
         total_data = 0
-        if args.decay:
+
+        if args.decay and epoch > 100:
             dis_lr = args.dis_learning_rate - \
-                ((args.dis_learning_rate / 100) * (epoch + 40))
+                ((args.dis_learning_rate / 100) * (200 - epoch))
             gen_lr = args.gen_learning_rate - \
-                ((args.gen_learning_rate / 100) * (epoch + 40))
+                ((args.gen_learning_rate / 100) * (200 - epoch))
 
             for l in range(len(optimiser_d_x.param_groups)):
                 optimiser_d_x.param_groups[l]['lr'] = dis_lr
@@ -150,11 +153,13 @@ def train(args, device):
             del x
             del y
 
+        if epoch % args.save_epoch == 0 or epoch == args.num_epochs:
+            torch.save({"d_x": d_x.state_dict(), "d_y": d_y.state_dict(), "g_x_y": g_x_y.state_dict(), "g_y_x": g_y_x.state_dict(), "optimiser_d_x": optimiser_d_x.state_dict(
+            ), "optimiser_d_y": optimiser_d_y.state_dict(), "optimiser_g_x_y": optimiser_g_x_y.state_dict(), "optimiser_g_y_x": optimiser_g_y_x.state_dict()}, args.save_path + 'model{}{}.pt'.format(epoch, time))
+
         avg_d_loss = total_d_loss / total_data
         avg_g_x_y_loss = total_g_x_y_loss / total_data
         avg_g_y_x_loss = total_g_y_x_loss / total_data
-
-        time = datetime.now()
 
         with open(args.save_path + f'discrimLoss{time}.txt', 'a') as f:
             f.write("Avg Discriminator Loss: {}".format(avg_d_loss))
@@ -167,6 +172,3 @@ def train(args, device):
 
     with open(args.save_path + f'model{time}.txt', 'w') as f:
         f.write(str(args))
-
-    torch.save({"d_x": d_x.state_dict(), "d_y": d_y.state_dict(), "g_x_y": g_x_y.state_dict(), "g_y_x": g_y_x.state_dict(), "optimiser_d_x": optimiser_d_x.state_dict(
-    ), "optimiser_d_y": optimiser_d_y.state_dict(), "optimiser_g_x_y": optimiser_g_x_y.state_dict(), "optimiser_g_y_x": optimiser_g_y_x.state_dict()}, args.save_path + 'model{}.pt'.format(time))
