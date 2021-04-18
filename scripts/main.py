@@ -1,8 +1,7 @@
 import argparse
 from attrdict import AttrDict
 import train
-import trainVAE
-import evaluate
+# import evaluate
 import torch
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -22,6 +21,7 @@ args_dict = {
     'stride': 2,
     'y': "../data/trainZebra/",
     'x': "../data/trainHorse/",
+    'save_path': '../models/',
     'act_fn_gen': 'relu',
     'act_fn_dis': 'lrelu',
     'norm_type': 'instance',
@@ -35,8 +35,9 @@ args_dict = {
     # 'num_train_samples': 10,
     'train': True
 }
+
 run_args.update(args_dict)
 if run_args.train:
     train.train(run_args, device)
-else:
-    evaluate.evaluate(folder_path, run_args, device, isVAE=isVAE)
+# else:
+#     evaluate.evaluate(folder_path, run_args, device, isVAE=isVAE)

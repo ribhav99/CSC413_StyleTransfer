@@ -140,6 +140,20 @@ def train(args, device):
         avg_d_loss = total_d_loss / total_data
         avg_g_x_y_loss = total_g_x_y_loss / total_data
         avg_g_y_x_loss = total_g_y_x_loss / total_data
-        print("Avg Discriminator Loss: {}".format(avg_d_loss))
-        print("Avg Horse to Zebra Loss: {}".format(avg_g_x_y_loss))
-        print("Avg Zebra to Horse Loss: {}".format(avg_g_y_x_loss))
+
+        time = datetime.now()
+
+        torch.save({"d_x": d_x.state_dict(), "d_y": d_y.state_dict(), "g_x_y": g_x_y.state_dict(), "g_y_x": g_y_x.state_dict(), "optimiser_d_x": optimiser_d_x.state_dict(
+        ), "optimiser_d_y": optimiser_d_y.state_dict(), "optimiser_g_x_y": optimiser_g_x_y.state_dict(), "optimiser_g_y_x": optimiser_g_y_x.state_dict()}, args.save_path + 'model{}.pt'.format(time))
+
+        with open(args.save_path + f'discrimLoss{time}.txt', 'a') as f:
+            f.write("Avg Discriminator Loss: {}".format(avg_d_loss))
+
+        with open(args.save_path + f'genx_yLoss{time}.txt', 'a') as f:
+            f.write("Avg X to Y Loss: {}".format(avg_g_x_y_loss))
+
+        with open(args.save_path + f'geny_xLoss{time}.txt', 'a') as f:
+            f.write("Avg Y to X Loss: {}".format(avg_g_y_x_loss))
+
+    with open(args.save_path + f'model{time}.txt', 'w') as f:
+        f.write(str(args))
