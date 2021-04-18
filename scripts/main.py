@@ -13,7 +13,7 @@ run_args = AttrDict()
 args_dict = {
     'dis_learning_rate': 0.0002,
     'gen_learning_rate': 0.0002,
-    'batch_size': 16,
+    'batch_size': 20,
     'num_epochs': 200,
     'channel_list': [3, 32, 64, 128, 256],  # if gray, channel_list[0] = 1
     'image_dim': (256, 256, 3),  # 1 if gray, 3 if coloured
@@ -25,15 +25,16 @@ args_dict = {
     'act_fn_gen': 'relu',
     'act_fn_dis': 'lrelu',
     'norm_type': 'instance',
-    'num_res': 3,
-    # 'dropout': 0.5,
+    'num_res': 9,
     'lambda_cycle': 10,
     'gray': False,
     'Conv2T': False,
     'buffer_train': False,  # please set batch size to 10 when using this
     'decay': True,
     # 'num_train_samples': 10,
-    'train': True
+    'train': True,
+    'load_models': False,
+    'model_path': '../models/something.pt'
 }
 
 run_args.update(args_dict)

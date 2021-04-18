@@ -29,6 +29,19 @@ def train(args, device):
         loss = (torch.abs(real - reconstructed)).mean()
         return args.lambda_cycle * loss
 
+    if args.load_models:
+        print("Loading Models...")
+        models = torch.load(args.model_path)
+        d_x.load_state_dict(models['d_x'])
+        d_y.load_state_dict(models['d_y'])
+        g_x_y.load_state_dict(models['g_x_y'])
+        g_y_x.load_state_dict(models['g_y_x'])
+        optimiser_d_x.load_state_dict(models['optimiser_d_x'])
+        optimiser_d_y.load_state_dict(models['optimiser_d_y'])
+        optimiser_g_x_y.load_state_dict(models['optimiser_g_x_y'])
+        optimiser_g_y_x.load_state_dict(models['optimiser_g_y_x'])
+        print("Successfully Loaded Models...")
+
     d_x.train()
     d_y.train()
     g_x_y.train()
@@ -143,9 +156,6 @@ def train(args, device):
 
         time = datetime.now()
 
-        torch.save({"d_x": d_x.state_dict(), "d_y": d_y.state_dict(), "g_x_y": g_x_y.state_dict(), "g_y_x": g_y_x.state_dict(), "optimiser_d_x": optimiser_d_x.state_dict(
-        ), "optimiser_d_y": optimiser_d_y.state_dict(), "optimiser_g_x_y": optimiser_g_x_y.state_dict(), "optimiser_g_y_x": optimiser_g_y_x.state_dict()}, args.save_path + 'model{}.pt'.format(time))
-
         with open(args.save_path + f'discrimLoss{time}.txt', 'a') as f:
             f.write("Avg Discriminator Loss: {}".format(avg_d_loss))
 
@@ -157,3 +167,6 @@ def train(args, device):
 
     with open(args.save_path + f'model{time}.txt', 'w') as f:
         f.write(str(args))
+
+    torch.save({"d_x": d_x.state_dict(), "d_y": d_y.state_dict(), "g_x_y": g_x_y.state_dict(), "g_y_x": g_y_x.state_dict(), "optimiser_d_x": optimiser_d_x.state_dict(
+    ), "optimiser_d_y": optimiser_d_y.state_dict(), "optimiser_g_x_y": optimiser_g_x_y.state_dict(), "optimiser_g_y_x": optimiser_g_y_x.state_dict()}, args.save_path + 'model{}.pt'.format(time))
