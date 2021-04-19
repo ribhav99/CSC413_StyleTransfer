@@ -13,7 +13,7 @@ run_args = AttrDict()
 args_dict = {
     'dis_learning_rate': 0.0002,
     'gen_learning_rate': 0.0002,
-    'batch_size': 20,
+    'batch_size': 16,
     'num_epochs': 200,
     'channel_list': [3, 32, 64, 128, 256],  # if gray, channel_list[0] = 1
     'image_dim': (256, 256, 3),  # 1 if gray, 3 if coloured
@@ -28,7 +28,7 @@ args_dict = {
     'num_res': 9,
     'lambda_cycle': 10,
     'gray': False,
-    'Conv2T': False,
+    'conv2T': False,
     'buffer_train': False,  # please set batch size to 10 when using this
     'decay': True,
     # 'num_train_samples': 10,
