@@ -63,7 +63,7 @@ def train(args, device):
             10, dimensions[0], dimensions[1], dimensions[2]).to(device)
         sampling = args.batch_size//2
     print("Start Training....")
-    for epoch in trange(1, args.num_epochs+1):
+    for epoch in trange(args.starting_epoch, args.num_epochs+1):
         total_d_loss = 0.0
         total_g_x_y_loss = 0.0
         total_g_y_x_loss = 0.0

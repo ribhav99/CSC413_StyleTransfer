@@ -1,7 +1,7 @@
 import argparse
 from attrdict import AttrDict
 import train
-# import evaluate
+import test
 import torch
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -15,12 +15,13 @@ args_dict = {
     'gen_learning_rate': 0.0002,
     'batch_size': 16,
     'num_epochs': 200,
+    'starting_epoch': 1,
     'channel_list': [3, 32, 64, 128, 256],  # if gray, channel_list[0] = 1
     'image_dim': (256, 256, 3),  # 1 if gray, 3 if coloured
     'kernel': 4,
     'stride': 2,
-    'y': "../data/trainZebra/",
-    'x': "../data/trainHorse/",
+    'x': "../data/testPhoto/",
+    'y': "../data/testUkiyoe/",
     'save_path': '../models/',
     'act_fn_gen': 'relu',
     'act_fn_dis': 'lrelu',
@@ -29,17 +30,16 @@ args_dict = {
     'lambda_cycle': 10,
     'gray': False,
     'conv2T': False,
-    'buffer_train': False,  # please set batch size to 10 when using this
+    'buffer_train': False,
     'decay': True,
-    # 'num_train_samples': 10,
-    'train': True,
+    'train': False,
     'load_models': False,
-    'model_path': '../models/something.pt',
+    'model_path': '../models/Photo&Ukiyoe/model2002021-04-19 16:51:39.382780.pt',
     'save_epoch': 10
 }
 
 run_args.update(args_dict)
 if run_args.train:
     train.train(run_args, device)
-# else:
-#     evaluate.evaluate(folder_path, run_args, device, isVAE=isVAE)
+else:
+    test.test(run_args, device)

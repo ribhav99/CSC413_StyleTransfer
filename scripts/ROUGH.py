@@ -1,7 +1,7 @@
 import imageio
 import os
 
-direc = "../data/testZebra/"
+direc = "../data/testUkiyoe/"
 for root, dirs, files in os.walk(direc, topdown=False):
     for name in files:
         if name.endswith(".jpg") or name.endswith(".png"):
