@@ -15,13 +15,13 @@ args_dict = {
     'gen_learning_rate': 0.0002,
     'batch_size': 16,
     'num_epochs': 200,
-    'starting_epoch': 1,
+    'starting_epoch': 101,
     'channel_list': [3, 32, 64, 128, 256],  # if gray, channel_list[0] = 1
     'image_dim': (256, 256, 3),  # 1 if gray, 3 if coloured
     'kernel': 4,
     'stride': 2,
-    'x': "../data/testPhoto/",
-    'y': "../data/testUkiyoe/",
+    'x': "../data/testHorse/",
+    'y': "../data/testZebra/",
     'save_path': '../models/',
     'act_fn_gen': 'relu',
     'act_fn_dis': 'lrelu',
@@ -34,7 +34,7 @@ args_dict = {
     'decay': True,
     'train': False,
     'load_models': False,
-    'model_path': '../models/Photo&Ukiyoe/model2002021-04-19 16:51:39.382780.pt',
+    'model_path': '../models/Horse&Zebra/model2002021-04-18 20:11:59.071908.pt',
     'save_epoch': 10
 }
 
