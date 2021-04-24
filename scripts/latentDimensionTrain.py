@@ -70,6 +70,7 @@ def train(args, device):
                 0.0), requires_grad=False).to(device)
 
             optimiser_d.zero_grad()
+            optimiser_g.zero_grad()
 
             fake_y = g(x)
 
@@ -80,7 +81,6 @@ def train(args, device):
             d_loss.backward()
             optimiser_d.step()
 
-            optimiser_g.zero_grad()
             loss_g = adversarial_loss(d(fake_y), valid)
 
             loss_g.backward()
