@@ -13,21 +13,26 @@ class GANDataset(Dataset):
     """
 
     def __init__(self, args):
-        self.y = args.y
         self.x = args.x
-        self.y_array = self._get_file_list(args.y)
         self.x_array = self._get_file_list(args.x)
-
         len1 = len(self.x_array)
-        len2 = len(self.y_array)
-        if len1 > len2:
-            self.trueLen = len2
-            self.x_array = self.x_array[:len2]
+        self.latentDims = args.LatentDims
+        if not self.latentDims:
+            self.y = args.y
+            self.y_array = self._get_file_list(args.y)
+            len2 = len(self.y_array)
+
+            if len1 > len2:
+                self.trueLen = len2
+                self.x_array = self.x_array[:len2]
+            else:
+                self.trueLen = len1
+                self.y_array = self.y_array[:len1]
+
+            assert(len(self.x_array) == len(self.y_array))
         else:
             self.trueLen = len1
-            self.y_array = self.y_array[:len1]
 
-        assert(len(self.x_array) == len(self.y_array))
         self.gray = args.gray
 
     def _get_file_list(self, root_dir):
@@ -55,9 +60,11 @@ class GANDataset(Dataset):
         return torch.from_numpy(image).float()
 
     def __getitem__(self, idx):
-        y_img = self.load(self.y, self.y_array[idx])
         x_img = self.load(self.x, self.x_array[idx])
-        return y_img, x_img
+        if not self.latentDims:
+            y_img = self.load(self.y, self.y_array[idx])
+            return y_img, x_img
+        return x_img
 
 
 def get_data_loader(args):

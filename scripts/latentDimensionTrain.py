@@ -22,8 +22,6 @@ def train(args, device):
     optimiser_d = optim.Adam(d.parameters(), lr=args.dis_learning_rate)
     optimiser_g = optim.Adam(g.parameters(), lr=args.gen_learning_rate)
 
-    klDiv = nn.KLDivLoss()
-
     if args.load_models:
         print("Loading Models...")
         models = torch.load(args.model_path)
@@ -73,9 +71,10 @@ def train(args, device):
 
         for batch_num, data in enumerate(full_data):
 
-            y, x = data[0].to(device), data[1].to(
-                device)
-            total_data += x.shape[0]
+            y = data.to(device)
+            x = torch.normal(0, 1, size=(
+                args.batch_size, args.channel_list[0], args.image_dim[0], args.image_dim[1])).to(device)
+            total_data += y.shape[0]
 
             optimiser_g.zero_grad()
             optimiser_d.zero_grad()
@@ -110,8 +109,8 @@ def train(args, device):
 
             optimiser_d.step()
 
-            loss_g = ((d(fake_y) - 1)**2).mean() + \
-                klDiv(y, fake_y)
+            loss_g = ((d(fake_y) - 1)**2).mean()
+            loss_g /= 2
 
             loss_g.backward()
             optimiser_g.step()
