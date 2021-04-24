@@ -5,15 +5,12 @@ from GeneratorAndDiscriminator import Generator, Discriminator
 from dataloader import get_data_loader
 from tqdm import tqdm, trange
 from datetime import datetime
-from torch.autograd import Variable
 
 
 def train(args, device):
     full_data = get_data_loader(args)
 
     time = datetime.now()
-
-    adversarial_loss = nn.BCELoss()
 
     d = Discriminator(args).to(device)
     print("--Discriminator architecture--")
@@ -59,29 +56,27 @@ def train(args, device):
 
         for batch_num, data in enumerate(full_data):
 
-            y = ((data + 1)/2.0).to(device)
-            x = torch.normal(5, 10, size=(
-                data.shape[0], args.channel_list[0], args.image_dim[0], args.image_dim[1])).to(device)
+            y = data.to(device)
+            x = torch.normal(0, 1, size=(
+                args.batch_size, args.channel_list[0], args.image_dim[0], args.image_dim[1])).to(device)
             total_data += y.shape[0]
 
-            valid = Variable(torch.Tensor(data.shape[0], 1).fill_(
-                1.0), requires_grad=False).to(device)
-            fake = Variable(torch.Tensor(data.shape[0], 1).fill_(
-                0.0), requires_grad=False).to(device)
-
+            optimiser_g.zero_grad()
             optimiser_d.zero_grad()
 
             fake_y = g(x)
 
-            real_loss = adversarial_loss(d(y), valid)
-            fake_loss = adversarial_loss(d(fake_y.detach()), fake)
-            d_loss = (real_loss + fake_loss) / 2
+            d_loss = ((d(x) - 1) ** 2).mean() + \
+                (d(fake_y.detach())**2).mean()
+
+            d_loss /= 2
 
             d_loss.backward()
+
             optimiser_d.step()
 
-            optimiser_g.zero_grad()
-            loss_g = adversarial_loss(d(fake_y), valid)
+            loss_g = ((d(fake_y) - 1)**2).mean()
+            loss_g /= 2
 
             loss_g.backward()
             optimiser_g.step()
@@ -90,9 +85,6 @@ def train(args, device):
 
             del x
             del y
-            del valid
-            del fake
-            del fake_y
 
         if epoch % args.save_epoch == 0 or epoch == args.num_epochs:
             torch.save({"d": d.state_dict(), "g": g.state_dict(), "optimiser_d": optimiser_d.state_dict(

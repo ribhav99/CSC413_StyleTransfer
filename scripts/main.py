@@ -36,7 +36,7 @@ args_dict = {
     'decay': True,
     'train': False,
     'load_models': False,
-    'model_path': '../models/model52021-04-24 13:04:26.582314.pt',
+    'model_path': '../models/model52021-04-24 14:20:53.055862.pt',
     'save_epoch': 10,
     'LatentDims': True
 }

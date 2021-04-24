@@ -24,7 +24,7 @@ def test(args, device):
     total_g_loss = 0.0
     total_data = 0
 
-    N = 10
+    N = 50
 
     x = torch.normal(0, 1, size=(
         N, args.channel_list[0], args.image_dim[0], args.image_dim[1])).to(device)

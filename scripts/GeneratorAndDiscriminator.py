@@ -20,8 +20,8 @@ class Generator(nn.Module):
         model += [ResidualBlock(channel_list[-1], args.norm_type)
                   for _ in range(args.num_res)]
 
-        _ = channel_list.pop(0)
-        channel_list.insert(0, args.image_dim[2])
+        # _ = channel_list.pop(0)
+        # channel_list.insert(0, args.image_dim[2])
         channel_list.reverse()
         for i in range(len(channel_list) - 1):
             input_channel = channel_list[i]
@@ -38,7 +38,7 @@ class Generator(nn.Module):
 
             model.append(make_norm(output_channel, args.norm_type))
             if i == len(channel_list) - 2:
-                model.append(make_activation('tanh'))
+                model.append(make_activation('sigmoid'))
             else:
                 model.append(make_activation(args.act_fn_gen))
 
