@@ -90,7 +90,7 @@ def train(args, device):
         for batch_num, data in enumerate(full_data):
 
             y, x = data[0].to(device), data[1].to(
-                device)  # x is cartoon, y is human
+                device)
             total_data += x.shape[0]
 
             optimiser_g_x_y.zero_grad()

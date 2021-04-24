@@ -3,6 +3,8 @@ from attrdict import AttrDict
 import train
 import test
 import torch
+import MLETrain
+import MLETest
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # device = torch.device('cpu')
@@ -15,7 +17,7 @@ args_dict = {
     'gen_learning_rate': 0.0002,
     'batch_size': 16,
     'num_epochs': 200,
-    'starting_epoch': 101,
+    'starting_epoch': 1,
     'channel_list': [3, 32, 64, 128, 256],  # if gray, channel_list[0] = 1
     'image_dim': (256, 256, 3),  # 1 if gray, 3 if coloured
     'kernel': 4,
@@ -34,12 +36,19 @@ args_dict = {
     'decay': True,
     'train': False,
     'load_models': False,
-    'model_path': '../models/Horse&Zebra/model2002021-04-18 20:11:59.071908.pt',
-    'save_epoch': 10
+    'model_path': '../models/model2002021-04-24 10:26:40.453567.pt',
+    'save_epoch': 10,
+    'MLE': True
 }
 
 run_args.update(args_dict)
 if run_args.train:
-    train.train(run_args, device)
+    if run_args.MLE:
+        MLETrain.train(run_args, device)
+    else:
+        train.train(run_args, device)
 else:
-    test.test(run_args, device)
+    if run_args.MLE:
+        MLETest.test(run_args, device)
+    else:
+        test.test(run_args, device)
